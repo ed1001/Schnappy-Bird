@@ -307,7 +307,7 @@ module Gosu
     # @return [Integer] the width of the text, in pixels.
     # @param text [String]
     def text_width(text, scale_x=1); end
-    
+
     ##
     # Like {#text_width}, but supports the following markup tags: `<b>bold</b>`, `<i>italic</i>`, `<c=rrggbb>colors</c>`.
     def markup_width(markup, scale_x=1); end
@@ -403,13 +403,13 @@ module Gosu
 
     ##
     # Returns an image that is a smaller, rectangular view of this {Image}.
-    # 
+    #
     # This is a very fast operation, and no new textures will be allocated.
     # If you update this {Image} or the {#subimage} using {#insert}, the other {Image} will be affected as well.
-    # 
+    #
     # Caveats:
     # * If you stretch or rotate a {#subimage}, the pixels adjacent to it might bleed into it, as Gosu does not manage the 'tileability' of subimages.
-    # 
+    #
     # @return [Image?] an image that represents a portion of the containing image
     def subimage(left, top, width, height); end
 
@@ -559,16 +559,16 @@ module Gosu
     # @param [Float]
     # @return [Float]
     attr_writer :volume
-    
+
     ##
     # Sets the playback speed. A value of 2.0 will play the sample at 200% speed and one octave higher. A value of 0.5 will play the sample at 50% speed and one octave lower. The valid range of this property depends on the operating system, but values up to 8.0 should work.
-    # @param [Float]    
+    # @param [Float]
     # @return [Float]
     attr_writer :speed
-    
+
     ##
     # Set the amount of panning, i.e. the position of the sound when using stereo speakers. 0.0 is the centre, negative values are to the left, positive values are to the right. If something happens on the edge of the screen, a good value for pan would be ±0.1.
-    # @param [Float] 
+    # @param [Float]
     # @return [Float]
     attr_writer :pan
 
@@ -764,7 +764,7 @@ module Gosu
     ##
     # Toggles between windowed mode and fullscreen.
     attr_writer :fullscreen
-    
+
     ##
     # @return [true, false] whether this window is resizable.
     def resizable?; end
@@ -778,7 +778,7 @@ module Gosu
     #
     # Resizable fullscreen windows always use the full desktop resolution.
     # Windows that are larger than the desktop resolution will be shrunk.
-    # 
+    #
     # @overload initialize(width, height, options = {})
     # @overload initialize(width, height, fullscreen, update_interval = 16.666666)
     #
@@ -795,18 +795,18 @@ module Gosu
     #
     # @return [void]
     def show; end
-    
+
     ##
     # EXPERIMENTAL - MAY DISAPPEAR WITHOUT WARNING.
-    # 
+    #
     # Performs a single step in the main loop.
     # This can be useful for integrating Gosu with other libraries that have their own main loop, e.g. Ruby/Tk.
-    # 
+    #
     # See: https://www.libgosu.org/cgi-bin/mwf/topic_show.pl?tid=1218
-    # 
+    #
     # If you find a good way to use {#tick}, please let us know on the forum and we can make this a part of Gosu's stable interface.
     # Thank you!
-    # 
+    #
     # @return [true, false] whether the {Window} should still be shown after this tick
     def tick; end
 
@@ -854,7 +854,7 @@ module Gosu
     #
     # @return [bool]
     def close; end
-    
+
     ##
     # This method is called before {#update} if a button is pressed while the window has focus.
     #
