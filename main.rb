@@ -181,12 +181,15 @@ class GameWindow < Gosu::Window
     @sounds[:fly_off].play(0.2)
     @sounds[:song].stop
     @last_score = @game_state.score
-    File.open('data.json', 'wb') do |file|
-      file.write(JSON.generate("hi_score": @game_state.score.to_s))
-    end if @game_state.score > @hi_score.to_i
+    if @game_state.score > @hi_score.to_i
+      @hi_score = @game_state.score
+      File.open('data.json', 'wb') do |file|
+        file.write(JSON.generate("hi_score": @game_state.score.to_s))
+      end
+    end
   end
 end
 
-window = GameWindow.new(600, 450, fullscreen: true)
+window = GameWindow.new(600, 450, fullscreen: false)
 
 window.show
