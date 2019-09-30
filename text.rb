@@ -18,8 +18,7 @@ class Text
     hi_score(player)
 
     if player.alive
-      pre_game(player) unless player.started
-      @fonts[:score_board].draw_text(player.score.to_s, 500, 50, 1)
+      player.started ? @fonts[:score_board].draw_text(player.score.to_s, 500, 50, 1) : pre_game(player)
     else
       draw_game_over
     end
