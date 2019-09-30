@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'gosu'
 
 class Environment
@@ -6,13 +8,13 @@ class Environment
 
   SCROLL_SPEED = 2
   PIPE_SPEED = 5
-  RANGE = (150..400)
+  RANGE = (150..400).freeze
   SPACING = 334
   GAP = 95
 
   def initialize(width)
     @images = {
-      background: Gosu::Image.new('images/schnappy_bird_BG.jpg', tileable: true),
+      background: Gosu::Image.new('images/bg.jpg', tileable: true),
       pipe: Gosu::Image.new('images/pipe.png'),
       coin: Gosu::Image.new('images/coin.png')
     }
@@ -29,6 +31,7 @@ class Environment
 
   def pipe_move(player)
     @pipes << Pipe.new(@screen_width, rand(RANGE), false) if @pipes.last.x < SPACING
+
     @pipes.each do |pipe|
       collision(player, pipe) if pipe.x.between?(219, 305)
       pipe.x -= PIPE_SPEED
@@ -37,10 +40,9 @@ class Environment
       next unless pipe.x < player.x - @images[:pipe].width && !pipe.passed
 
       player.score += 1
-      player.sounds[:point_sound].play(0.2)
+      player.sounds[:point].play(0.2)
       pipe.passed = true
       if @coin_countdown.negative?
-        p @coins
         @coins << Coin.new(@screen_width + 50, rand(100..300))
         @coin_countdown = rand(3..10)
       end
@@ -52,7 +54,7 @@ class Environment
     @coins.each do |coin|
       collect_coin(player) if coin.x.between?(256, 336)
       coin.x -= PIPE_SPEED
-      @coins.delete(coin) if coin.x < -20
+      @coins.delete(coin) if coin.x < -@images[:coin].width
     end
   end
 
@@ -84,7 +86,7 @@ class Environment
     return unless coin_collided?(player)
 
     player.score += 1
-    player.sounds[:coin_sound].play(0.7)
+    player.sounds[:coin].play(0.7)
     @coins.pop
   end
 

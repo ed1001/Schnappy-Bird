@@ -1,28 +1,31 @@
+# frozen_string_literal: true
+
 require 'gosu'
 
 class Player
-  attr_reader :alive, :started, :score, :hi_score, :last_score, :sounds, :x, :y, :images
-  attr_writer :score
+  attr_reader :alive, :started, :hi_score, :last_score, :sounds, :x, :y, :images
+  attr_accessor :score
 
   GRAVITY = 23.8 / 60
 
-  def initialize
+  def initialize(last_score = 0)
     @images = {
-      player: Gosu::Image.new('images/schnappy_bird.png'),
+      player: Gosu::Image.new('images/bird.png'),
       trail_1: Gosu::Image.new('images/trail_1_alt.png'),
-      trail_2: Gosu::Image.new('images/trail_2_alt.png'),
+      trail_2: Gosu::Image.new('images/trail_2_alt.png')
     }
     @sounds = {
-      point_sound: Gosu::Sample.new('sounds/schnappy_point.mp3'),
-      jump_sound: Gosu::Sample.new('sounds/schnappy_jump.mp3'),
-      death_sound: Gosu::Sample.new('sounds/schnappy_death.mp3'),
-      fly_off: Gosu::Sample.new('sounds/schnappy_flyoff.mp3'),
-      coin_sound: Gosu::Sample.new('sounds/schnappy_coin.mp3'),
+      point: Gosu::Sample.new('sounds/schnappy_point.mp3'),
+      jump: Gosu::Sample.new('sounds/schnappy_jump.mp3'),
+      death: Gosu::Sample.new('sounds/schnappy_death.mp3'),
+      spin: Gosu::Sample.new('sounds/schnappy_flyoff.mp3'),
+      coin: Gosu::Sample.new('sounds/schnappy_coin.mp3'),
       song: Gosu::Song.new('sounds/Chiba.mp3')
     }
     @y = 225
     @x = 280
-    @v = @angle = @score = @last_score = 0
+    @velocity = @angle = @score = 0
+    @last_score = last_score
     @frame = :player
     @alive = true
     @started = false
@@ -30,22 +33,22 @@ class Player
   end
 
   def move
-    @v += GRAVITY
-    @y += @v
-    @angle = rotate(@v)
-    @frame = animate(@v)
+    @velocity += GRAVITY
+    @y += @velocity
+    @angle = rotate(@velocity)
+    @frame = animate(@velocity)
   end
 
   def jump
     return unless @alive
 
-    @v = -7
-    @sounds[:jump_sound].play(0.2)
+    @velocity = -7
+    @sounds[:jump].play(0.2)
 
-    unless @started
-      @started = true
-      @sounds[:song].play(true)
-    end
+    return if @started
+
+    @started = true
+    @sounds[:song].play(true)
   end
 
   def draw
@@ -58,48 +61,47 @@ class Player
 
   def die
     @alive = false
-    @sounds[:death_sound].play(0.2)
-    @sounds[:fly_off].play(0.2)
+    @sounds[:death].play(0.2)
+    @sounds[:spin].play(0.2)
     @sounds[:song].stop
     @last_score = @score
-    if @score > @hi_score.to_i
-      @hi_score = @score
-      File.open('data.json', 'wb') do |file|
-        file.write(JSON.generate("hi_score": @score.to_s))
-      end
+
+    return unless @score > @hi_score.to_i
+
+    @hi_score = @score
+    File.open('data.json', 'wb') do |file|
+      file.write(JSON.generate("hi_score": @score.to_s))
     end
   end
 
   private
 
   def rotate(velocity)
-    case
-    when velocity.negative?
+    if velocity.negative?
       330
-    when velocity.between?(0, 5)
+    elsif velocity.between?(0, 5)
       0
-    when velocity.between?(5, 8)
+    elsif velocity.between?(5, 8)
       15
-    when velocity.between?(8, 12)
+    elsif velocity.between?(8, 12)
       25
-    when velocity.between?(12, 15)
+    elsif velocity.between?(12, 15)
       30
-    when velocity > 15
+    elsif velocity > 15
       80
     end
   end
 
   def animate(velocity)
-    case
-    when velocity < -3
+    if velocity < -3
       :trail_2
-    when velocity.between?(-3, -1)
+    elsif velocity.between?(-3, -1)
       :trail_1
-    when velocity.between?(-1, 8)
+    elsif velocity.between?(-1, 8)
       :player
-    when velocity.between?(8, 12)
+    elsif velocity.between?(8, 12)
       :trail_1
-    when velocity > 12
+    elsif velocity > 12
       :trail_2
     end
   end

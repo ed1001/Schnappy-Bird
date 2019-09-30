@@ -1,14 +1,14 @@
+# frozen_string_literal: true
+
 require 'gosu'
 require 'json'
 require_relative 'player'
 require_relative 'environment'
 
 class GameWindow < Gosu::Window
-  def initialize(*args)
-    super
-    @images = {
-      background: Gosu::Image.new('images/schnappy_bird_BG.jpg', tileable: true)
-    }
+  def initialize
+    super 600, 450, fullscreen: false
+
     @fonts = {
       score_board: Gosu::Font.new(45),
       hi_score_board: Gosu::Font.new(20),
@@ -24,11 +24,14 @@ class GameWindow < Gosu::Window
 
   def button_down(btn)
     super
+
     case btn
     when Gosu::KB_ESCAPE
       close
     when Gosu::KB_SPACE
       @player.jump
+    when Gosu::KB_F
+      self.fullscreen = !fullscreen?
     end
   end
 
@@ -59,7 +62,7 @@ class GameWindow < Gosu::Window
 
   def new_game
     @restart_delay = 120
-    @player = Player.new
+    @player = Player.new(@player.last_score)
     @environment = Environment.new(width)
   end
 
@@ -68,13 +71,13 @@ class GameWindow < Gosu::Window
     if @player.alive && !@player.started
       @fonts[:game_text].draw_text("Schnappy Bird", 160, 120, 3)
       @fonts[:instruct_text].draw_text("press space to start", 240, 300, 3)
-       @fonts[:hi_score_board].draw_text("last score: #{@player.last_score}", 460, 35, 1) if @player.last_score > 0
+      @fonts[:hi_score_board].draw_text("last score: #{@player.last_score}", 460, 35, 1) if @player.last_score.positive?
     else
-       @fonts[:score_board].draw_text(@player.score.to_s, 500, 50, 1)
+      @fonts[:score_board].draw_text(@player.score.to_s, 500, 50, 1)
     end
   end
 end
 
-window = GameWindow.new(600, 450, fullscreen: false)
+window = GameWindow.new
 
 window.show
