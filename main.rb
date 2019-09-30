@@ -4,22 +4,16 @@ require 'gosu'
 require 'json'
 require_relative 'player'
 require_relative 'environment'
+require_relative 'text'
 
 class GameWindow < Gosu::Window
   def initialize
     super 600, 450, fullscreen: false
 
-    @fonts = {
-      score_board: Gosu::Font.new(45),
-      hi_score_board: Gosu::Font.new(20),
-      game_text: Gosu::Font.new(50),
-      instruct_text: Gosu::Font.new(12)
-    }
-
     @restart_delay = 120
-
     @player = Player.new
     @environment = Environment.new(width)
+    @text = Text.new
   end
 
   def button_down(btn)
@@ -51,11 +45,11 @@ class GameWindow < Gosu::Window
   end
 
   def draw
-    draw_text
-    @environment.draw_bg
     @player.draw
+    @environment.draw_bg
     @environment.draw_pipes
     @environment.draw_coins
+    @text.draw(@player)
   end
 
   private
@@ -64,17 +58,7 @@ class GameWindow < Gosu::Window
     @restart_delay = 120
     @player = Player.new(@player.last_score)
     @environment = Environment.new(width)
-  end
-
-  def draw_text
-    @fonts[:hi_score_board].draw_text("hi-score: #{@player.hi_score.to_i > @player.score ? @player.hi_score : @player.score.to_s}", 460, 15, 1)
-    if @player.alive && !@player.started
-      @fonts[:game_text].draw_text("Schnappy Bird", 160, 120, 3)
-      @fonts[:instruct_text].draw_text("press space to start", 240, 300, 3)
-      @fonts[:hi_score_board].draw_text("last score: #{@player.last_score}", 460, 35, 1) if @player.last_score.positive?
-    else
-      @fonts[:score_board].draw_text(@player.score.to_s, 500, 50, 1)
-    end
+    @text = Text.new
   end
 end
 
