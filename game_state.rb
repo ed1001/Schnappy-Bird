@@ -1,7 +1,7 @@
 class GameState
   attr_accessor :scroll, :pipes, :restart_delay, :game_over_v, :game_over_y, :coins
 
-  def initialize(width, height, pipe)
+  def initialize(pipe)
     @scroll = 0
     @pipes = [pipe]
     @score = 0

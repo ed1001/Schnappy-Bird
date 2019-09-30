@@ -3,6 +3,7 @@ require 'json'
 require_relative 'movement'
 require_relative 'game_state'
 require_relative 'player'
+require_relative 'obstacle'
 
 class GameWindow < Gosu::Window
   Pipe = Struct.new(:x, :y, :passed)
@@ -18,7 +19,6 @@ class GameWindow < Gosu::Window
     super
     @images = {
       background: Gosu::Image.new('images/schnappy_bird_BG.jpg', tileable: true),
-      pipe: Gosu::Image.new('images/pipe.png'),
       coin: Gosu::Image.new('images/coin.png')
     }
     @fonts = {
@@ -28,8 +28,9 @@ class GameWindow < Gosu::Window
       instruct_text: Gosu::Font.new(12)
     }
     # new gamestate object with starting values
-    @game_state = GameState.new(width, height, Pipe.new(width, rand(RANGE), false))
+    @game_state = GameState.new
     @player = Player.new
+    @obstacle = Obstacle.new
     # general variables
 
     @coin_countdown = 0
