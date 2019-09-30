@@ -32,8 +32,8 @@ class Player
   def move
     @v += GRAVITY
     @y += @v
-    @angle = Movement.rotate(@v)
-    @frame = Movement.animate(@v)
+    @angle = rotate(@v)
+    @frame = animate(@v)
   end
 
   def jump
