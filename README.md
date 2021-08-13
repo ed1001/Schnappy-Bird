@@ -4,6 +4,21 @@ A clone of the legendary Flappy Bird game that was withdrawn by it's developer d
 
 Uses the 2D game development library Gosu.
 
-My first endeavor into game development, for the next challenge I'll be looking into more advanced form of collision detection (Separated Axis Thereom), aiming to make it a platformer. 
+Sound effects and music are home made.
 
-N.B. all sound effects and music are home made :)
+## getting started
+install ruby if not already installed:
+```shell
+brew install ruby
+```
+in the project folder run the following command:
+```shell
+bin/start.sh
+```
+
+### controls
+action | key
+-------|----
+jump/start game| space bar
+toggle fullscreen|F
+quit game|ESC
